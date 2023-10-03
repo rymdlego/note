@@ -38,5 +38,5 @@ if [ $# -eq 0 ]; then
     "${EDITOR:-vim}" "$file_name"
 else
     # Write each argument to the file on the same line
-    echo "$*" >> "$file_name"
+    echo "- $*" >> "$file_name"
 fi
