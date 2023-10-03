@@ -39,12 +39,16 @@ fi
 find "$dir" -type f -name "*.md" | while read -r file; do
   # Initialize a variable to track the number of keyword matches
   match_count=0
+  file_lower=$(echo "$file" | tr '[:upper:]' '[:lower:]')
 
-  # Loop through the provided keywords and search for them in the file
+  # Loop through the provided keywords
   for keyword in "$@"; do
-    if grep -i -q "$keyword" "$file"; then
+    keyword_lower=$(echo "$keyword" | tr '[:upper:]' '[:lower:]')
+    # Search for the keywords in the file contents
+    if grep -q "$keyword_lower" "$file_lower"; then
       ((match_count++))
-    elif [[ "$file" == *"$keyword"* ]]; then
+    # Search for the key keywords in the filename
+    elif [[ "$file_lower" == *"$keyword_lower"* ]]; then
       ((match_count++))
     else
       # If any keyword is not found, break the loop early
