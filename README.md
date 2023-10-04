@@ -1,8 +1,8 @@
 # note
 Access your Obsidian notes from the terminal
 ## Installation
-Copy the `note` script into a pathed folder, for instance `~/bin`
-Set an environment variable for `NOTES_PATH`, like this (no trailing slash):
+- Copy the `note` script into a pathed folder, for instance `~/bin`
+- Set an environment variable for `NOTES_PATH`, like this (no trailing slash):
 ```
 export NOTES_PATH=/path/to/my/obsidian/vault
 ```
@@ -47,7 +47,7 @@ This appends *something very important* to your daily note.
 # openssl s_client -connect example.com:443 -servername example.com -showcerts </dev/null | openssl x509 -noout -dates
 # n !!
 ```
-Just another example of appending information. You run some complicated command and you want to remember it for future use. `n !!`will add the previous command to your daily note.
+Another example of appending things. You run some complicated command and you want to remember it. `n !!` will add the previous command to your daily note.
 
 ```
 # n -s vpn customer infra
@@ -67,4 +67,4 @@ This one will work if you have `fzf` installed. By running `n -f` with no other 
 ```
 # n -v kubernetes
 ```
-The `-v` flag will view notes. In this case we will view kubernetes.md. If you specify more notes, those will be displayed as well.
+Finally, the `-v` flag will view your notes. In this case we will view kubernetes.md. If you specify more notes, those will be displayed as well.
