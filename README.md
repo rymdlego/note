@@ -10,7 +10,7 @@ export NOTES_PATH=/path/to/my/obsidian/vault
 ```
 export NOTES_DAILIES=dailies
 ```
-This sets a subfolder for daily notes (no trailing slash). In this example they will be placed in /dailies/
+This sets a subfolder for daily notes (no trailing slash). In this example they will be placed in `/dailies/`. Default is vault root.
 
 ```
 export NOTES_PREFIX='- '
@@ -20,7 +20,7 @@ When you quick-append to daily note, the rows will be prefixed with whatever you
 ```
 export NOTES_VIEWER=bat
 ```
-If you want to use something else but cat for displaying notes. I recommend bat. It's very nice for this. Default is cat.
+If you want to use something else but `cat` for displaying notes. I recommend `bat`. It's very nice for this. Default is `cat`.
 
 ```
 export EDITOR=vim
@@ -30,7 +30,7 @@ Set the default editor in your shell. This is probably already in place.
 ```
 alias n=note
 ```
-Do it.
+Do it. You want it.
 
 ## Usage
 ```
