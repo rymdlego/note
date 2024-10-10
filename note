@@ -2,108 +2,116 @@
 
 # Check for environment variables
 if [ -z "$NOTES_PATH" ]; then
-	echo "NOTES_PATH environment variable is not set."
-	exit 1
+  echo "NOTES_PATH environment variable is not set."
+  exit 1
 fi
 
 if [ -z "$NOTES_DAILIES" ]; then
-	NOTES_DAILIES=/
+  NOTES_DAILIES=/
 fi
 
 if [ -z "$NOTES_PREFIX" ]; then
-	NOTES_PREFIX=''
+  NOTES_PREFIX=''
 fi
 
 if [ -z "$NOTES_VIEWER" ]; then
-	NOTES_VIEWER='cat'
+  NOTES_VIEWER='cat'
 fi
 
 # Check if argument is a search flag
 if [ "$1" = "-s" ]; then
-	# Check if any keywords are given
-	if [ "$#" -gt 1 ]; then
-		# Loop through all text files in the directory and its subdirectories
-		find "$NOTES_PATH" -type f -name "*.md" | while IFS= read -r file; do
-			# Initialize a variable to track the number of keyword matches
-			match_count=0
-			# Lowercase filename
-			file_lower=$(echo "$file" | tr '[:upper:]' '[:lower:]')
-			# Loop through positional parameters starting from the second one
-			shift
-			for keyword; do
-				# Lowercase keyword
-				keyword_lower=$(echo "$keyword" | tr '[:upper:]' '[:lower:]')
-				# Search for the keywords in the file contents
-				if grep -q -i "$keyword_lower" "$file"; then
-					match_count=$((match_count + 1))
-				# Search for the key keywords in the filename
-				elif echo "$file_lower" | grep -q "$keyword_lower"; then
-					match_count=$((match_count + 1))
-				fi
-			done
+  # Check if any keywords are given
+  if [ "$#" -gt 1 ]; then
+    # Loop through all text files in the directory and its subdirectories
+    find "$NOTES_PATH" -type f -name "*.md" | while IFS= read -r file; do
+      # Initialize a variable to track the number of keyword matches
+      match_count=0
+      # Lowercase filename
+      file_lower=$(echo "$file" | tr '[:upper:]' '[:lower:]')
+      # Loop through positional parameters starting from the second one
+      shift
+      for keyword; do
+        # Lowercase keyword
+        keyword_lower=$(echo "$keyword" | tr '[:upper:]' '[:lower:]')
+        # Search for the keywords in the file contents
+        if grep -q -i "$keyword_lower" "$file"; then
+          match_count=$((match_count + 1))
+        # Search for the key keywords in the filename
+        elif echo "$file_lower" | grep -q "$keyword_lower"; then
+          match_count=$((match_count + 1))
+        fi
+      done
 
-			# If all keywords are found in the file, display the entire file
-			if [ "$match_count" -eq $(($# - 1)) ]; then
-				if [ "$NOTES_VIEWER" = "cat" ]; then
-					display_name="${file##*/}"
-					printf "\n-------- %s --------\n" "$display_name"
-				fi
-				"$NOTES_VIEWER" "$file" # Display the entire file
-				printf "\n"
-			fi
-		done
-		exit 0
-	else
-		echo "ERROR: No keywords given."
-		exit 1
-	fi
+      # If all keywords are found in the file, display the entire file
+      if [ "$match_count" -eq $(($# - 1)) ]; then
+        if [ "$NOTES_VIEWER" = "cat" ]; then
+          display_name="${file##*/}"
+          printf "\n-------- %s --------\n" "$display_name"
+        fi
+        "$NOTES_VIEWER" "$file" # Display the entire file
+        printf "\n"
+      fi
+    done
+    exit 0
+  else
+    echo "ERROR: No keywords given."
+    exit 1
+  fi
 fi
 
 # Check if argument is a view flag
 if [ "$1" = "-v" ]; then
-	# Check if any arguments are given
-	if [ "$#" -gt 1 ]; then
-		shift
-		for keyword; do
-			file_name="$NOTES_PATH/$keyword.md"
-			# Check if the file exists
-			if [ -f "$file_name" ]; then
-				"$NOTES_VIEWER" "$file_name"
-			else
-				echo "ERROR: There is no note with that name."
-				exit 1
-			fi
-		done
-	else
-		echo "ERROR: No note specified."
-		exit 1
-	fi
-	exit 0
+  # Check if any arguments are given
+  if [ "$#" -gt 1 ]; then
+    shift
+    for keyword; do
+      file_name="$NOTES_PATH/$keyword.md"
+      # Check if the file exists
+      if [ -f "$file_name" ]; then
+        "$NOTES_VIEWER" "$file_name"
+      else
+        echo "ERROR: There is no note with that name."
+        exit 1
+      fi
+    done
+  else
+    echo "ERROR: No note specified."
+    exit 1
+  fi
+  exit 0
 fi
 
 # Check if argument is a file flag
 if [ "$1" = "-f" ]; then
-	# Check if any arguments are given
-	if [ "$#" -eq 2 ]; then
-		file_name="$NOTES_PATH/$2.md"
+  # Check if any arguments are given
+  if [ "$#" -eq 2 ]; then
+    file_name="$NOTES_PATH/$2.md"
 
-		# Check if the file exists, if not, create it
-		if [ ! -f "$file_name" ]; then
-			touch "$file_name"
-		fi
+    # Check if the file exists, if not, create it
+    if [ ! -f "$file_name" ]; then
+      touch "$file_name"
+    fi
 
-		# Open the file with the default editor
-		"${EDITOR:-vim}" "$file_name"
-	else
-		# When -f flag is given with no arguments, perform a fzf search if fzf is installed
-		if command -v fzf >/dev/null 2>&1; then
-			"${EDITOR:-vim}" "$(find "$NOTES_PATH" -type f -name "*.md" | fzf)"
-		else
-			echo "ERROR: No note specified."
-			exit 1
-		fi
-	fi
-	exit 0
+    # Open the file with the default editor
+    "${EDITOR:-vim}" "$file_name"
+  else
+    # When -f flag is given with no arguments, perform a fzf search if fzf is installed
+    if command -v fzf >/dev/null 2>&1; then
+      "${EDITOR:-vim}" "$(find "$NOTES_PATH" -type f -name "*.md" | fzf)"
+    else
+      echo "ERROR: No note specified."
+      exit 1
+    fi
+  fi
+  exit 0
+fi
+
+if [ "$1" = "git" ]; then
+  # Shift the first argument and pass the rest as git commands
+  shift
+  # Execute the git command in the notes directory
+  git -C "$NOTES_PATH" "$@"
+  exit 0
 fi
 
 # Get today's date
@@ -114,14 +122,14 @@ daily_note="$NOTES_PATH/$NOTES_DAILIES/$today.md"
 
 # Check if the file exists, if not, create it
 if [ ! -f "$daily_note" ]; then
-	touch "$daily_note"
+  touch "$daily_note"
 fi
 
 # Check if any arguments are given
 if [ "$#" -eq 0 ]; then
-	# Open the file with the default editor
-	"${EDITOR:-vim}" "$daily_note"
+  # Open the file with the default editor
+  "${EDITOR:-vim}" "$daily_note"
 else
-	# Write each argument to the daily note
-	echo "$NOTES_PREFIX$*" >>"$daily_note"
+  # Write each argument to the daily note
+  echo "$NOTES_PREFIX$*" >>"$daily_note"
 fi
