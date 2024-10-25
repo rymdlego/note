@@ -14,7 +14,7 @@
 ## Quicky install (requires Go):
 
 ```bash
-go install github.com/rymdlego/go@latest
+go install github.com/rymdlego/note@latest
 ```
 
 This will place the executable in $HOME/go/bin or $GOPATH (if you have it set to something else).
