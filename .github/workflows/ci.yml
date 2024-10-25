@@ -27,7 +27,9 @@ jobs:
         with:
           version: v1.47.0
           args: "--timeout 5m0s"
-          cache-key: golangci-lint-cache-${{ runner.os }}-${{ github.run_id }}
+          skip-cache: true  # Skip lint cache
+          skip-pkg-cache: true  # Skip Go package cache
+          skip-build-cache: true  # Skip Go build cache
       - name: Check Formatting
         run: gofmt -l .
   environment-test:
