@@ -1,15 +1,15 @@
 # Note
 
-**Note** is a command-line interface tool for managing notes efficiently. It supports creating, editing, viewing, searching notes, and includes Git integration to keep your notes synchronized and version-controlled. It works amazingly well with note systems like Obsidian.
+**Note** is a minimal command-line interface tool for managing notes efficiently written in Go. It supports creating, editing, viewing, searching notes, and includes Git integration to keep your notes synchronized and version-controlled. It works amazingly well with note systems like Obsidian.
 
 ## Features
 
 - Create and edit notes using your preferred text editor.
+- Scratch note functionality for instant note-taking, and piping output into a note. (`echo !! | note`)
 - Automatically save notes in the specified notes directory (`NOTES_PATH`).
-- Supports searching notes by name and content.
+- Supports searching notes by their content to easily locate what you need.
 - Git integration for version control
-- Scratch notes functionality for quick note-taking.
-- Shell autocompletion for commands and file names (supports Bash, Zsh, Fish, and PowerShell).
+- Shell autocompletion for commands AND file names (supports Bash, Zsh, Fish, and PowerShell).
 
 ## Quicky install (requires Go):
 
@@ -42,9 +42,12 @@ Make sure to have that in your $PATH
 
 ## Setup
 
-Before using the `note` CLI, ensure that the following environment variables are set:
+Before using the `note` CLI, ensure that the following environment variable is set:
 
 - `NOTES_PATH`: Path to the directory where notes are stored.
+
+Optional environment variables:
+
 - `EDITOR`: The text editor to use when editing notes (default: `vi`).
 - `NOTES_FILETYPE`: The file type for notes (default: `md`).
 - `NOTES_SCRATCHFILE`: The scratch file name for quick notes (default: `scratch`).
@@ -54,19 +57,20 @@ For example:
 ```bash
 export NOTES_PATH="$HOME/notes"
 export EDITOR="nvim"
+export NOTES_SCRATCHFILE="random"
 ```
 
 ## Usage
 
 ### General Commands
 
-1. **Edit or Create a Note**:
+1. **Edit or Open a new Note**:
 
    ```bash
    note edit <name>
    ```
 
-   This command opens the note for editing. If the note doesn’t exist, it creates a new one with the given name.
+   This command opens the note for editing, or just opens the editor with the desired document name.
 
    Alias: `note insert <name>`
 
@@ -76,7 +80,7 @@ export EDITOR="nvim"
    note show <name>
    ```
 
-   Displays the contents of the note using the configured viewer (`NOTES_VIEWER`, default is `cat`).
+   Displays the contents of the note using the configured viewer (`NOTES_VIEWER`, default is `cat`, you might want to use something cool like `glow`).
 
    Aliases: `note view`, `note display`
 
@@ -96,7 +100,7 @@ export EDITOR="nvim"
    note find <searchstring>
    ```
 
-   Finds notes whose names or content contain the search string.
+   Finds notes whose content contain the search string.
 
 5. **Version**:
 
@@ -119,7 +123,7 @@ export EDITOR="nvim"
    - `note git add .`
    - `note git commit -m "Updated notes"`
 
-   You can also use shortcuts for common Git commands:
+   You can also use these shorthand commands for common Git actions:
 
    - `note status`
    - `note add <files>`
@@ -127,9 +131,9 @@ export EDITOR="nvim"
    - `note push`
    - `note pull`
 
-### Scratch Notes
+### Scratch Note
 
-If you run `note` without any arguments, it opens a "scratch" note for quick notes:
+If you run `note` without any arguments, it opens the "scratch" note, which is just a generic note for unsorted ideas:
 
 ```bash
 note
@@ -139,6 +143,13 @@ You can also pipe content to the scratch note:
 
 ```bash
 echo "Eggs and Avocadoes" | note
+```
+
+Why not document that long command you just ran:
+
+```bash
+kubectl create secret generic something -n default --from-env-file myfile --dry-run=client -o yaml
+echo !! | note
 ```
 
 ## Autocompletion
