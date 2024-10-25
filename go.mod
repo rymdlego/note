@@ -1,6 +1,6 @@
 module github.com/rymdlego/note
 
-go 1.23.2
+go 1.23
 
 require (
 	github.com/ddddddO/gtree v1.10.11
