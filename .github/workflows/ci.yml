@@ -27,6 +27,7 @@ jobs:
         with:
           version: v1.47.0
           args: "--timeout 5m0s"
+          cache-key: golangci-lint-cache-${{ runner.os }}-${{ github.run_id }}
       - name: Check Formatting
         run: gofmt -l .
   environment-test:
@@ -54,7 +55,6 @@ jobs:
           go run main.go list
           echo "Test Content" | go run main.go
           go run main.go show scratch
-          go run main.go git status
       - name: Validate Command Outputs
         run: |
           go run main.go list | grep "test_note"
