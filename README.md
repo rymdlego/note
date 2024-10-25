@@ -1,6 +1,6 @@
 # Note
 
-**Note** is a minimal command-line interface tool for managing notes efficiently written in Go. It supports creating, editing, viewing, searching notes, and includes Git integration to keep your notes synchronized and version-controlled. It works amazingly well with note systems like Obsidian.
+**Note** is a simple but amazing note-taking tool for the command, written in Go. It supports creating, editing, viewing, searching notes, and includes Git integration to keep your notes synchronized and version-controlled. It works amazingly well with note systems like Obsidian.
 
 ## Features
 
