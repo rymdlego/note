@@ -11,7 +11,16 @@
 - Scratch notes functionality for quick note-taking.
 - Shell autocompletion for commands and file names (supports Bash, Zsh, Fish, and PowerShell).
 
-## Installation
+## Quicky install (requires Go):
+
+```bash
+go install github.com/rymdlego/go@latest
+```
+
+This will place the executable in $HOME/go/bin or $GOPATH (if you have it set to something else).
+Make sure to have that in your $PATH
+
+## The Git clone install (requires Go)
 
 1. Clone the repository:
 
@@ -129,7 +138,7 @@ note
 You can also pipe content to the scratch note:
 
 ```bash
-echo "Quick note" | note
+echo "Eggs and Avocadoes" | note
 ```
 
 ## Autocompletion

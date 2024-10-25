@@ -1,0 +1,61 @@
+---
+name: CI
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.17', '1.18', '1.19']
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install Dependencies
+        run: go mod tidy
+      - name: Run Unit Tests
+        run: go test ./... -v
+      - name: Lint Code
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.47.0
+          args: "--timeout 5m0s"
+      - name: Check Formatting
+        run: gofmt -l .
+  environment-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      - name: Install Dependencies
+        run: go mod tidy
+      - name: Set Environment Variables
+        run: |
+          echo "NOTES_PATH=$HOME/test_notes" >> $GITHUB_ENV
+          echo "EDITOR=echo" >> $GITHUB_ENV
+          echo "NOTES_FILETYPE=md" >> $GITHUB_ENV
+          echo "NOTES_SCRATCHFILE=scratch" >> $GITHUB_ENV
+          echo "NOTES_VIEWER=cat" >> $GITHUB_ENV
+      - name: Run Core Functional Tests
+        run: |
+          mkdir -p $NOTES_PATH
+          go run main.go edit test_note
+          go run main.go list
+          echo "Test Content" | go run main.go
+          go run main.go show scratch
+          go run main.go git status
+      - name: Validate Command Outputs
+        run: |
+          go run main.go list | grep "test_note"
+          go run main.go find "test" | grep "test_note"
